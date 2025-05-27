@@ -1,0 +1,121 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #4b0082, #1e90ff, #ff1493, #00ced1); /* New gradient: deep purple, dodger blue, hot pink, turquoise */
+    background-size: 400%;
+    animation: colorShift 15s ease infinite;
+}
+
+/* Background color animation */
+@keyframes colorShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 400% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+form {
+    background: rgba(40, 40, 60, 0.1); /* Darker, cooler-toned background with transparency */
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid rgba(200, 200, 255, 0.3); /* Light purple-blue border */
+}
+
+label {
+    display: block;
+    font-size: 1.1rem;
+    color: #e6e6fa; /* Lavender for better contrast */
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(200, 200, 255, 0.2); /* Light purple-blue input background */
+    color: #f0f8ff; /* Alice blue text for readability */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: rgba(200, 200, 255, 0.7); /* Light purple-blue placeholder */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    background: rgba(200, 200, 255, 0.3); /* Slightly brighter on focus */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+button#login, button[type="submit"] {
+    background: linear-gradient(45deg, #ff1493, #4b0082); /* Hot pink to deep purple */
+    color: #f0f8ff; /* Alice blue text */
+}
+
+button#signup {
+    background: linear-gradient(45deg, #00ced1, #1e90ff); /* Turquoise to dodger blue */
+    color: #f0f8ff; /* Alice blue text */
+}
+
+button#Login {
+    background: linear-gradient(45deg, #00ced1, #1e90ff); /* Turquoise to dodger blue (consistent with signup) */
+    color: #f0f8ff; /* Alice blue text */
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #e6e6fa, #b0c4de); /* Lavender to light steel blue */
+    color: #2f4f4f; /* Dark slate gray for contrast */
+}
+
+/* Responsive design */
+@media (max-width: 500px) {
+    form {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    label {
+        font-size: 1rem;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+        font-size: 0.9rem;
+    }
+}

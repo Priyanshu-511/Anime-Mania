@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/homestyle.css">
+    <title>Home Page</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Welcome <%= userName || 'Guest' %></h1>
+            <form action="/logout" method="POST">
+                <button type="submit" id="logout">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+        <% if (message) { %>
+            <p style="color: green;"><%= message %></p>
+        <% } %>
+        <h1>This is the Homepage</h1>
+        <h2>Search Anime</h2>
+        <form id="searchForm">
+          <input type="text" id="searchInput" placeholder="Search by name or genre..." />
+          <button type="submit">Search</button>
+        </form>
+
+        <section>
+      <h2>Anime List</h2>
+      <% data.forEach(anime => { %>
+        <div class="anime-card">
+          <img src="<%= anime.Image %>" alt="anime image" width="200" />
+          <h3><%= anime["Anime name"] %></h3>
+          <p><strong>Year:</strong> <%= anime.Year %></p>
+          <p><strong>Score:</strong> <%= anime.Score %> (<%= anime.Voting %>)</p>
+          <p><strong>Summary:</strong> <%= anime.Summary %></p>
+          <p><strong>Stars:</strong> <%= anime.Stars %></p>
+          <p><strong>Genre:</strong> <%= anime.Genre %></p>
+        </div>
+      <% }) %>
+    </section>
+
+    <h2>Add New Anime</h2>
+    <form action="/add-anime" method="POST">
+      <input name="Anime name" placeholder="Anime Name" required />
+      <input name="Year" placeholder="Year" required />
+      <input name="Score" placeholder="Score" required />
+      <input name="Voting" placeholder="Voting" />
+      <input name="Summary" placeholder="Summary" />
+      <input name="Number of episode" placeholder="Number of Episodes" />
+      <input name="Stars" placeholder="Stars" />
+      <input name="Genre" placeholder="Genre" />
+      <input name="Image" placeholder="Image URL" />
+      <button type="submit">Add</button>
+    </form>
+    </main>
+    <script src="../public/homescript.js"></script>
+</body>
+</html>
