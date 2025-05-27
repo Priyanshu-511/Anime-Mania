@@ -5,7 +5,7 @@ const User = require('../models/usermodels');
 passport.use(new LocalStrategy(
   { usernameField: 'email' }, // use if your form uses name="email"
   async (email, password, done) => {
-    console.log('Received credentials:', email, password);
+    console.log('Received credentials');
     try {
       const user = await User.findOne({ email: email });
       if (!user) {
