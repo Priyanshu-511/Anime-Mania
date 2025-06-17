@@ -15,45 +15,69 @@
             </form>
         </nav>
     </header>
-    <main>
+     <main>
         <% if (message) { %>
-            <p style="color: green;"><%= message %></p>
+            <p style="color: green; text-align: center; font-weight: bold; padding: 10px;"><%= message %></p>
         <% } %>
-        <h1>This is the Homepage</h1>
-        <h2>Search Anime</h2>
-        <form id="searchForm">
-          <input type="text" id="searchInput" placeholder="Search by name or genre..." />
-          <button type="submit">Search</button>
-        </form>
-
-        <section>
-      <h2>Anime List</h2>
-      <% data.forEach(anime => { %>
-        <div class="anime-card">
-          <img src="<%= anime.Image %>" alt="anime image" width="200" />
-          <h3><%= anime["Anime name"] %></h3>
-          <p><strong>Year:</strong> <%= anime.Year %></p>
-          <p><strong>Score:</strong> <%= anime.Score %> (<%= anime.Voting %>)</p>
-          <p><strong>Summary:</strong> <%= anime.Summary %></p>
-          <p><strong>Stars:</strong> <%= anime.Stars %></p>
-          <p><strong>Genre:</strong> <%= anime.Genre %></p>
+        
+        <h1 style="text-align: center; margin: 20px 0;">Anime Database</h1>
+        
+        <div class="search-section">
+            <h2>Search Anime</h2>
+            <form id="searchForm">
+                <input id="searchInput" type="text" placeholder="Search by name, genre, year, or description...">
+                <button type="submit">Search</button>
+            </form>
+            <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                💡 Tip: Start typing to see suggestions, then click on any result to scroll to that anime!
+            </p>
         </div>
-      <% }) %>
-    </section>
+<br><br><br>
+        <section>
+            <h2>Anime List (<span id="animeCount"><%= data.length %></span> total)</h2>
+            <% if (data.length === 0) { %>
+                <p style="text-align: center; color: #666; font-style: italic;">No anime in the database yet. Add some below!</p>
+            <% } else { %>
+                <% data.forEach(anime => { %>
+                    <div class="anime-card">
+                        <% if (anime.Image) { %>
+                            <img src="<%= anime.Image %>" alt="<%= anime['Anime name'] %> poster" width="200" onerror="this.style.display='none'" />
+                        <% } %>
+                        <h3><%= anime["Anime name"] %></h3>
+                        <p><strong>Year:</strong> <%= anime.Year %></p>
+                        <p><strong>Score:</strong> <%= anime.Score %><% if (anime.Voting) { %> (<%= anime.Voting %>)<% } %></p>
+                        <% if (anime.Summary) { %>
+                            <p><strong>Summary:</strong> <%= anime.Summary %></p>
+                        <% } %>
+                        <% if (anime.Stars) { %>
+                            <p><strong>Stars:</strong> <%= anime.Stars %></p>
+                        <% } %>
+                        <% if (anime.Genre) { %>
+                            <p><strong>Genre:</strong> <%= anime.Genre %></p>
+                        <% } %>
+                        <% if (anime["Number of episode"]) { %>
+                            <p><strong>Episodes:</strong> <%= anime["Number of episode"] %></p>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </section>
 
-    <h2>Add New Anime</h2>
-    <form action="/add-anime" method="POST">
-      <input name="Anime name" placeholder="Anime Name" required />
-      <input name="Year" placeholder="Year" required />
-      <input name="Score" placeholder="Score" required />
-      <input name="Voting" placeholder="Voting" />
-      <input name="Summary" placeholder="Summary" />
-      <input name="Number of episode" placeholder="Number of Episodes" />
-      <input name="Stars" placeholder="Stars" />
-      <input name="Genre" placeholder="Genre" />
-      <input name="Image" placeholder="Image URL" />
-      <button type="submit">Add</button>
-    </form>
+        <div class="add-anime-section">
+            <h2>Add New Anime</h2>
+            <form action="/add-anime" method="POST">
+                <input name="Anime name" placeholder="Anime Name" required />
+                <input name="Year" placeholder="Year (e.g., 2023)" type="number" required />
+                <input name="Score" placeholder="Score (0-10)" type="number" step="0.1" min="0" max="10" required />
+                <input name="Voting" placeholder="Number of Votes" type="number" />
+                <textarea name="Summary" placeholder="Brief summary or description..." rows="4" style="resize: vertical;"></textarea>
+                <input name="Number of episode" placeholder="Number of Episodes" type="number" />
+                <input name="Stars" placeholder="Voice actors/Stars" />
+                <input name="Genre" placeholder="Genre (e.g., Action, Romance, Comedy)" />
+                <input name="Image" placeholder="Image URL (optional)" type="url" />
+                <button type="submit">Add Anime</button>
+            </form>
+        </div>
     </main>
     <script src="../public/homescript.js"></script>
 </body>
