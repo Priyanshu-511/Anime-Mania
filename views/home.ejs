@@ -11,6 +11,7 @@
         <nav>
             <h1>Welcome <%= userName || 'Guest' %></h1>
             <form action="/logout" method="POST">
+                <a href="#add-anime" class="red-rounded-link">Add Anime</a>
                 <button type="submit" id="logout">Logout</button>
             </form>
         </nav>
@@ -63,7 +64,7 @@
             <% } %>
         </section>
 
-        <div class="add-anime-section">
+        <div class="add-anime-section" id="add-anime">
             <h2>Add New Anime</h2>
             <form action="/add-anime" method="POST">
                 <input name="Anime name" placeholder="Anime Name" required />
@@ -79,6 +80,7 @@
             </form>
         </div>
     </main>
+    <a href="#top" class="return-to-top">Back to Top</a>
     <script src="../public/homescript.js"></script>
 </body>
 </html>
