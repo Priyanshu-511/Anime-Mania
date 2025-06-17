@@ -25,16 +25,111 @@ router.get('/home', (req, res) => {
   });
 });
 
+
+router.get('/api/search', (req, res) => {
+  const { query } = req.query;
+  
+  if (!query) {
+    return res.json({ results: [], message: 'No search query provided' });
+  }
+  
+  fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
+    if (err) return res.status(500).json({ error: 'Error loading anime data' });
+    
+    const data = JSON.parse(jsonData);
+    const searchTerm = query.toLowerCase();
+    
+    const results = data.filter(anime => {
+      return (
+        (anime["Anime name"] && anime["Anime name"].toLowerCase().includes(searchTerm)) ||
+        (anime.Genre && anime.Genre.toLowerCase().includes(searchTerm)) ||
+        (anime.Year && anime.Year.toString().includes(searchTerm)) ||
+        (anime.Summary && anime.Summary.toLowerCase().includes(searchTerm)) ||
+        (anime.Stars && anime.Stars.toLowerCase().includes(searchTerm))
+      );
+    });
+    
+    res.json({ 
+      results, 
+      total: results.length,
+      query: query
+    });
+  });
+});
+
+
+router.get('/api/anime/:name', (req, res) => {
+  const animeName = req.params.name;
+  
+  fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
+    if (err) return res.status(500).json({ error: 'Error loading anime data' });
+    
+    const data = JSON.parse(jsonData);
+    const anime = data.find(item => 
+      item["Anime name"] && item["Anime name"].toLowerCase() === animeName.toLowerCase()
+    );
+    
+    if (!anime) {
+      return res.status(404).json({ error: 'Anime not found' });
+    }
+    
+    res.json(anime);
+  });
+});
+
 router.post('/add-anime', (req, res) => {
   fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
     if (err) return res.status(500).send("Error reading data");
 
     let animeList = JSON.parse(jsonData);
+    
+    // Validate required fields
+    if (!req.body["Anime name"] || !req.body.Year || !req.body.Score) {
+      return res.redirect('/home?error=Missing required fields');
+    }
+    
+    // Check if anime already exists
+    const existingAnime = animeList.find(anime => 
+      anime["Anime name"] && anime["Anime name"].toLowerCase() === req.body["Anime name"].toLowerCase()
+    );
+    
+    if (existingAnime) {
+      return res.redirect('/home?error=Anime already exists in database');
+    }
+    
+    // Add timestamp for when the anime was added
+    req.body.dateAdded = new Date().toISOString();
+    
     animeList.push(req.body);
 
     fs.writeFile(path.join(__dirname, '../movies.json'), JSON.stringify(animeList, null, 2), (err) => {
       if (err) return res.status(500).send("Error saving data");
-      res.redirect('/home');
+      res.redirect('/home?message=Anime added successfully!');
+    });
+  });
+});
+
+// Delete anime endpoint
+router.delete('/api/anime/:name', (req, res) => {
+  const animeName = req.params.name;
+  
+  fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
+    if (err) return res.status(500).json({ error: 'Error loading anime data' });
+    
+    let animeList = JSON.parse(jsonData);
+    const initialLength = animeList.length;
+    
+    animeList = animeList.filter(anime => 
+      !anime["Anime name"] || anime["Anime name"].toLowerCase() !== animeName.toLowerCase()
+    );
+    
+    if (animeList.length === initialLength) {
+      return res.status(404).json({ error: 'Anime not found' });
+    }
+    
+    fs.writeFile(path.join(__dirname, '../movies.json'), JSON.stringify(animeList, null, 2), (err) => {
+      if (err) return res.status(500).json({ error: 'Error saving data' });
+      res.json({ message: 'Anime deleted successfully' });
     });
   });
 });
