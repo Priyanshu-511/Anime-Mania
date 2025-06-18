@@ -110,56 +110,30 @@ router.post('/add-anime', (req, res) => {
 });
 
 // Delete anime endpoint
-router.delete('/api/delete', (req, res) => {
-  const { query } = req.query;
-  
-  if (!query) {
-    return res.json({ results: [], message: 'No search query provided write in /api/search?query="name of anime"' });
-  }
+router.delete('/api/delete/:name', (req, res) => {
+  const animeName = req.params.name;
   
   fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
     if (err) return res.status(500).json({ error: 'Error loading anime data' });
     
     let animeList = JSON.parse(jsonData);
-    const searchTerm = query.toLowerCase();
+    const initialLength = animeList.length;
     
-    // Store matching anime before deleting
-    const deletedAnime = animeList.filter(anime => {
-      return (
-        (anime["Anime name"] && anime["Anime name"].toLowerCase().includes(searchTerm)) ||
-        (anime.Genre && anime.Genre.toLowerCase().includes(searchTerm)) ||
-        (anime.Year && anime.Year.toString().includes(searchTerm)) ||
-        (anime.Summary && anime.Summary.toLowerCase().includes(searchTerm)) ||
-        (anime.Stars && anime.Stars.toLowerCase().includes(searchTerm))
-      );
-    });
+    animeList = animeList.filter(anime => 
+      !anime["Anime name"] || anime["Anime name"].toLowerCase() !== animeName.toLowerCase()
+    );
     
-    // Filter out matching anime to create updated list
-    animeList = animeList.filter(anime => {
-      return !(
-        (anime["Anime name"] && anime["Anime name"].toLowerCase().includes(searchTerm)) ||
-        (anime.Genre && anime.Genre.toLowerCase().includes(searchTerm)) ||
-        (anime.Year && anime.Year.toString().includes(searchTerm)) ||
-        (anime.Summary && anime.Summary.toLowerCase().includes(searchTerm)) ||
-        (anime.Stars && anime.Stars.toLowerCase().includes(searchTerm))
-      );
-    });
-    
-    if (deletedAnime.length === 0) {
-      return res.status(404).json({ results: [], total: 0, query, message: 'No anime found to delete' });
+    if (animeList.length === initialLength) {
+      return res.status(404).json({ error: 'Anime not found' });
     }
     
     fs.writeFile(path.join(__dirname, '../movies.json'), JSON.stringify(animeList, null, 2), (err) => {
       if (err) return res.status(500).json({ error: 'Error saving data' });
-      res.json({ 
-        results: deletedAnime, 
-        total: deletedAnime.length,
-        query,
-        message: 'Anime deleted successfully'
-      });
+      res.json({ message: 'Anime deleted successfully' });
     });
   });
 });
+
 router.get('/view-json', (req, res) => {
   const filePath = path.join(__dirname, '../movies.json');
   fs.readFile(filePath, 'utf8', (err, jsonData) => {
