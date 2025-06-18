@@ -42,7 +42,7 @@
                 <% data.forEach(anime => { %>
                     <div class="anime-card">
                         <% if (anime.Image) { %>
-                            <img src="<%= anime.Image %>" alt="<%= anime['Anime name'] %> poster" width="200" onerror="this.style.display='none'" />
+                            <img src="<%= anime.Image %>" alt="<%= anime['Anime name'] %> poster" onerror="this.style.display='none'" />
                         <% } %>
                         <h3><%= anime["Anime name"] %></h3>
                         <p><strong>Year:</strong> <%= anime.Year %></p>
