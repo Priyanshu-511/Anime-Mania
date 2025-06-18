@@ -134,6 +134,30 @@ router.delete('/api/delete/:name', (req, res) => {
   });
 });
 
+router.get('/api/delete/:name', (req, res) => {
+  const animeName = req.params.name;
+  
+  fs.readFile(path.join(__dirname, '../movies.json'), 'utf8', (err, jsonData) => {
+    if (err) return res.status(500).json({ error: 'Error loading anime data' });
+    
+    let animeList = JSON.parse(jsonData);
+    const initialLength = animeList.length;
+    
+    animeList = animeList.filter(anime => 
+      !anime["Anime name"] || anime["Anime name"].toLowerCase() !== animeName.toLowerCase()
+    );
+    
+    if (animeList.length === initialLength) {
+      return res.status(404).json({ error: 'Anime not found' });
+    }
+    
+    fs.writeFile(path.join(__dirname, '../movies.json'), JSON.stringify(animeList, null, 2), (err) => {
+      if (err) return res.status(500).json({ error: 'Error saving data' });
+      res.json({ message: 'Anime deleted successfully' });
+    });
+  });
+});
+
 router.get('/view-json', (req, res) => {
   const filePath = path.join(__dirname, '../movies.json');
   fs.readFile(filePath, 'utf8', (err, jsonData) => {
