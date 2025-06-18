@@ -134,6 +134,20 @@ router.delete('/api/anime/:name', (req, res) => {
   });
 });
 
+router.get('/view-json', (req, res) => {
+  const filePath = path.join(__dirname, '../movies.json');
+  fs.readFile(filePath, 'utf8', (err, jsonData) => {
+    if (err) return res.status(500).send('Error reading movies.json');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(jsonData);
+  });
+});
+
+router.get('/download-json', (req, res) => {
+  const filePath = path.join(__dirname, '../movies.json');
+  res.download(filePath, 'anime-data.json');
+});
+
 router.post('/logout', (req, res) => {
   res.redirect('/?message=You have been logged out.');
 });
