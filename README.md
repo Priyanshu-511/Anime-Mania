@@ -14,6 +14,8 @@ Anime Mania is a Node.js + Express web application that allows users to view, ad
 ## 📸 Preview
 
 ![App Screenshot](https://raw.githubusercontent.com/Priyanshu-511/Anime-Mania/main/screenshot/Demo-1.png) <!-- Replace with an actual screenshot URL -->
+![App Screenshot](https://raw.githubusercontent.com/Priyanshu-511/Anime-Mania/main/screenshot/Demo-2.png) <!-- Replace with an actual screenshot URL -->
+![App Screenshot](https://raw.githubusercontent.com/Priyanshu-511/Anime-Mania/main/screenshot/Demo-3.png) <!-- Replace with an actual screenshot URL -->
 
 ---
 
